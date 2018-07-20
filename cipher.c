@@ -1,4 +1,4 @@
-/* $OpenBSD: cipher.c,v 1.109 2018/02/07 02:06:50 jsing Exp $ */
+/* $OpenBSD: cipher.c,v 1.111 2018/02/23 15:58:37 markus Exp $ */
 /*
  * Author: Tatu Ylonen <ylo@cs.hut.fi>
  * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -82,7 +82,9 @@ struct sshcipher {
 
 static const struct sshcipher ciphers[] = {
 #ifdef WITH_OPENSSL
+#ifndef OPENSSL_NO_DES
 	{ "3des-cbc",		8, 24, 0, 0, CFLAG_CBC, EVP_des_ede3_cbc },
+#endif
 	{ "aes128-cbc",		16, 16, 0, 0, CFLAG_CBC, EVP_aes_128_cbc },
 	{ "aes192-cbc",		16, 24, 0, 0, CFLAG_CBC, EVP_aes_192_cbc },
 	{ "aes256-cbc",		16, 32, 0, 0, CFLAG_CBC, EVP_aes_256_cbc },
@@ -401,7 +403,7 @@ cipher_get_length(struct sshcipher_ctx *cc, u_int *plenp, u_int seqnr,
 		    cp, len);
 	if (len < 4)
 		return SSH_ERR_MESSAGE_INCOMPLETE;
-	*plenp = get_u32(cp);
+	*plenp = PEEK_U32(cp);
 	return 0;
 }
 
@@ -448,7 +450,7 @@ cipher_get_keyiv(struct sshcipher_ctx *cc, u_char *iv, u_int len)
 {
 #ifdef WITH_OPENSSL
 	const struct sshcipher *c = cc->cipher;
- 	int evplen;
+	int evplen;
 #endif
 
 	if ((cc->cipher->flags & CFLAG_CHACHAPOLY) != 0) {
@@ -493,7 +495,7 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
 {
 #ifdef WITH_OPENSSL
 	const struct sshcipher *c = cc->cipher;
- 	int evplen = 0;
+	int evplen = 0;
 #endif
 
 	if ((cc->cipher->flags & CFLAG_CHACHAPOLY) != 0)
