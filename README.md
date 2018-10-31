@@ -79,6 +79,9 @@ You might have to install xcode for zlib dependency:
 
 	sudo apt install autoconf automake git libtool openssl zlib1g-dev libssl-dev
 
+**On RHEL/AmazonLinux/CentOS**: You need to install several tools using `yum`:
+
+    brew install autoconf automake git libtool openssl-devel
 
 ### Step 1: Build and install liboqs
 
