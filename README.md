@@ -77,7 +77,7 @@ You might have to install xcode for zlib dependency:
 
 **On Ubuntu**: You need to install several tools using `apt`:
 
-	sudo apt install autoconf automake git libtool openssl zlib1g-dev libssl-dev
+	sudo apt install make autoconf automake git libtool openssl zlib1g-dev libssl-dev
 
 **On RHEL/AmazonLinux/CentOS**: You need to install several tools using `yum`:
 
